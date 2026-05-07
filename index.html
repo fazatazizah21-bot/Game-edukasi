@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Master - SMKN 3 Pandeglang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 10px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Image Setup */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('image_0891be.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.6);
+            z-index: -1;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .menu-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+            background-color: #ffffff;
+        }
+
+        .answer-btn {
+            background: white;
+            transition: all 0.2s ease;
+            border: 2px solid #f1f5f9;
+        }
+
+        .answer-btn:hover {
+            border-color: #3b82f6;
+            background-color: #f0f9ff;
+            transform: translateX(5px);
+        }
+
+        .timer-low {
+            color: #ef4444;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-2deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-overlay"></div>
+
+    <!-- Audio Element -->
+    <audio id="bgMusic" loop>
+        <source src="https://github.com/fazatazizah21-bot/Game-musik/raw/refs/heads/main/%ED%8C%8C%EB%8F%84_%EC%9C%84%EB%A5%BC_%EB%8B%AC%EB%A0%A4.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="app" class="w-full max-w-2xl glass-morphism p-6 md:p-10">
+        
+        <!-- MAIN MENU SCREEN -->
+        <div id="main-menu" class="text-center">
+            <div class="mb-4 inline-block p-4 bg-blue-500 rounded-3xl shadow-lg border-4 border-white">
+                <span class="text-6xl">🌐</span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-gray-800 mb-2 drop-shadow-sm">IoT Master Challenge</h1>
+            <p class="text-gray-600 mb-8 font-medium">Smart World Learning - Kelas X SMK</p>
+            
+            <div class="grid grid-cols-1 gap-4 max-w-sm mx-auto">
+                <div onclick="showSection('learning-goals')" class="menu-card p-5 rounded-2xl shadow-sm flex items-center space-x-4">
+                    <div class="bg-amber-100 p-3 rounded-xl text-2xl">🎯</div>
+                    <div class="text-left">
+                        <h3 class="font-bold text-gray-800">Tujuan Pembelajaran</h3>
+                        <p class="text-xs text-gray-500 italic">Target kompetensi siswa</p>
+                    </div>
+                </div>
+
+                <div onclick="showSection('identity-screen')" class="menu-card p-5 rounded-2xl bg-blue-600 shadow-xl flex items-center space-x-4 text-white hover:bg-blue-700">
+                    <div class="bg-white/20 p-3 rounded-xl text-2xl">🎮</div>
+                    <div class="text-left">
+                        <h3 class="font-bold">Latihan Soal Game</h3>
+                        <p class="text-xs text-blue-100 italic">Mulai tantangan seru!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-1">Dibuat Oleh</p>
+                <p class="text-sm font-bold text-gray-700">B Ratu - SMKN 3 Pandeglang</p>
+                <p class="text-[10px] text-gray-400 mt-2 italic">© 2024 Semua Hak Dilindungi</p>
+            </div>
+        </div>
+
+        <!-- LEARNING GOALS SCREEN -->
+        <div id="learning-goals" class="hidden">
+            <button onclick="showSection('main-menu')" class="mb-6 text-blue-600 font-bold flex items-center hover:underline">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Kembali ke Menu Utama
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2 border-blue-100">🎯 Tujuan Pembelajaran</h2>
+            <div class="space-y-4 text-gray-700">
+                <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100">
+                    <p class="font-bold text-blue-800 mb-1 italic">I. Pemahaman Dasar</p>
+                    <p class="text-sm leading-relaxed">Siswa mampu menjelaskan konsep, sejarah, dan ekosistem Internet of Things dengan bahasa yang sederhana.</p>
+                </div>
+                <div class="p-4 bg-green-50 rounded-2xl border border-green-100">
+                    <p class="font-bold text-green-800 mb-1 italic">II. Komponen Sistem</p>
+                    <p class="text-sm leading-relaxed">Siswa dapat membedakan fungsi Sensor (input), Mikrokontroler (proses), dan Aktuator (output).</p>
+                </div>
+                <div class="p-4 bg-purple-50 rounded-2xl border border-purple-100">
+                    <p class="font-bold text-purple-800 mb-1 italic">III. Studi Kasus Smart World</p>
+                    <p class="text-sm leading-relaxed">Siswa mampu menganalisis solusi IoT untuk masalah di bidang Pertanian, Industri, dan Kota Pintar.</p>
+                </div>
+            </div>
+            <button onclick="showSection('identity-screen')" class="mt-10 w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all active:scale-95">
+                Mengerti, Lanjut Latihan!
+            </button>
+        </div>
+
+        <!-- IDENTITY SCREEN -->
+        <div id="identity-screen" class="hidden text-center">
+            <button onclick="showSection('main-menu')" class="mb-6 text-blue-600 font-bold flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Kembali
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Identitas Peserta</h2>
+            <p class="text-gray-500 mb-8">Data ini digunakan untuk sertifikat skor di akhir game</p>
+            
+            <div class="space-y-4 max-w-sm mx-auto mb-10">
+                <div class="text-left">
+                    <label class="text-xs font-bold text-gray-400 uppercase ml-2 mb-1 block">Nama Lengkap</label>
+                    <input type="text" id="user-name" placeholder="Contoh: Ahmad Fauzi" class="w-full p-4 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white outline-none transition-all bg-gray-50">
+                </div>
+                <div class="text-left">
+                    <label class="text-xs font-bold text-gray-400 uppercase ml-2 mb-1 block">Kelas</label>
+                    <input type="text" id="user-class" placeholder="Contoh: X TJKT 2" class="w-full p-4 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white outline-none transition-all bg-gray-50">
+                </div>
+            </div>
+
+            <button onclick="initGame()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-2xl text-xl shadow-xl w-full max-w-sm transition-all active:scale-95">
+                Mulai Game Seru!
+            </button>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="game-screen" class="hidden">
+            <!-- Header Panel -->
+            <div class="bg-slate-800 rounded-2xl p-4 mb-6 flex justify-between items-center text-white shadow-inner">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center font-bold text-lg border-2 border-white/20" id="avatar-initial">?</div>
+                    <div class="hidden sm:block">
+                        <p class="text-[10px] text-blue-300 font-bold uppercase">Peserta</p>
+                        <p class="text-xs font-bold truncate max-w-[120px]" id="display-name">-</p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <div class="text-center px-3 border-r border-white/10">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Skor</p>
+                        <p class="text-lg font-black text-blue-400" id="score">0</p>
+                    </div>
+                    <div class="text-center px-3 border-r border-white/10">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Nyawa</p>
+                        <p class="text-lg font-black text-red-400" id="lives">3</p>
+                    </div>
+                    <div class="text-center w-14">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Timer</p>
+                        <p class="text-lg font-black" id="timer">60s</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-2 px-1">
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Progress Latihan</span>
+                <span class="text-[10px] font-bold text-blue-500 uppercase" id="q-counter">Soal 1 / 10</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-8">
+                <div id="progress-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
+            </div>
+
+            <div id="question-container" class="mb-10 text-center px-2">
+                <h2 id="question-text" class="text-xl md:text-2xl font-bold text-gray-800 leading-snug"></h2>
+            </div>
+
+            <div id="options-container" class="grid grid-cols-1 gap-3">
+                <!-- Answer buttons go here -->
+            </div>
+        </div>
+
+        <!-- FEEDBACK MODAL -->
+        <div id="feedback-container" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl animate-bounce-short">
+                <div id="feedback-icon" class="text-7xl mb-6"></div>
+                <h3 id="feedback-title" class="text-2xl font-black mb-3"></h3>
+                <div class="bg-slate-50 p-4 rounded-2xl mb-8 border border-slate-100">
+                    <p class="text-[10px] font-bold text-blue-500 uppercase mb-2">Penjelasan Singkat</p>
+                    <p id="feedback-msg" class="text-sm text-gray-600 leading-relaxed italic"></p>
+                </div>
+                <button onclick="nextQuestion()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl hover:bg-blue-700 shadow-lg active:scale-95 transition-all">
+                    Lanjut Soal Berikutnya →
+                </button>
+            </div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="end-screen" class="hidden text-center">
+            <div class="text-8xl mb-6 animate-pulse" id="final-emoji">🏆</div>
+            <h2 class="text-4xl font-black text-gray-800 mb-2">Hebat! Selesai</h2>
+            <p id="final-identity" class="text-blue-500 font-bold mb-8 text-lg"></p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-white p-5 rounded-3xl border-2 border-blue-50 shadow-sm">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Skor Akhir</p>
+                    <p class="text-4xl font-black text-blue-600" id="final-score">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border-2 border-green-50 shadow-sm">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Predikat</p>
+                    <p class="text-xl font-black text-green-600 mt-2" id="final-rank">-</p>
+                </div>
+            </div>
+            
+            <div class="p-5 bg-blue-50/50 rounded-2xl mb-10 border border-dashed border-blue-200">
+                <p id="result-message" class="text-gray-600 text-sm leading-relaxed"></p>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="restartGame()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-xl hover:bg-blue-700 transition-all">Main Lagi</button>
+                <button onclick="location.reload()" class="w-full bg-white text-gray-400 font-bold py-4 rounded-2xl border-2 border-gray-100 hover:bg-gray-50">Keluar ke Menu Utama</button>
+            </div>
+            
+            <p class="footer-text font-bold mt-10">© Ratu - SMKN 3 Pandeglang</p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "Teknologi yang memungkinkan benda fisik terhubung ke internet disebut...", options: ["Internet of Thinking", "Internet of Things", "Internet of Tasks", "Intranet of Things"], correct: 1, hint: "IoT (Internet of Things) adalah konsep konektivitas antar benda." },
+            { q: "Apa komponen IoT yang bertugas merasakan/mengambil data dari lingkungan?", options: ["Layar LCD", "Sensor", "Baterai", "Speaker"], correct: 1, hint: "Sensor mendeteksi input fisik seperti cahaya, suhu, atau gerak." },
+            { q: "Mikrokontroler ESP32 sering digunakan untuk IoT karena memiliki built-in...", options: ["Bensin", "WiFi & Bluetooth", "Roda", "Kamera Film"], correct: 1, hint: "Konektivitas nirkabel adalah syarat utama perangkat IoT." },
+            { q: "Fungsi utama 'Gateway' dalam arsitektur IoT adalah...", options: ["Menghias perangkat", "Jembatan koneksi ke internet", "Pendingin ruangan", "Menyimpan baterai"], correct: 1, hint: "Gateway menghubungkan jaringan lokal sensor ke Cloud." },
+            { q: "Contoh penerapan IoT pada 'Smart Farming' adalah...", options: ["Cangkul besi kuat", "Penyiraman tanaman otomatis berbasis sensor tanah", "Traktor manual", "Pupuk kandang"], correct: 1, hint: "Petani bisa menyiram tanaman hanya lewat HP berdasarkan data tanah." },
+            { q: "Dimana data dari jutaan sensor IoT biasanya disimpan dan diolah?", options: ["Flashdisk", "Cloud Computing", "Kertas Catatan", "Kabel Telepon"], correct: 1, hint: "Cloud menyediakan server raksasa untuk mengolah data IoT." },
+            { q: "Apa resiko yang harus diwaspadai dari perangkat IoT?", options: ["Debu", "Serangan Siber (Hacking)", "Casing Retak", "Ukuran Kecil"], correct: 1, hint: "Karena terhubung internet, keamanan data sangat rawan diretas." },
+            { q: "Protokol komunikasi yang sangat ringan untuk IoT adalah...", options: ["MQTT", "PDF", "JPEG", "MP4"], correct: 0, hint: "MQTT sangat efisien untuk mengirim data sensor yang kecil." },
+            { q: "Apa yang dilakukan 'Aktuator' setelah menerima perintah dari IoT?", options: ["Diam saja", "Melakukan aksi fisik (seperti membuka pintu)", "Mematikan internet", "Menghapus data"], correct: 1, hint: "Aktuator adalah penggerak mekanis seperti motor atau saklar." },
+            { q: "Konsep kota yang terintegrasi dengan berbagai sensor IoT disebut...", options: ["Big City", "Smart City", "Old City", "Clean City"], correct: 1, hint: "Smart City menggunakan IoT untuk mengatur lalu lintas, sampah, dan lampu jalan." }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let lives = 3;
+        let timerInterval;
+        let timeLeft = 60;
+        const bgMusic = document.getElementById('bgMusic');
+
+        function showSection(sectionId) {
+            ['main-menu', 'learning-goals', 'identity-screen', 'game-screen', 'end-screen'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function initGame() {
+            const name = document.getElementById('user-name').value.trim();
+            const uClass = document.getElementById('user-class').value.trim();
+
+            if (!name || !uClass) {
+                alert("Mohon lengkasi identitasmu dulu ya!");
+                return;
+            }
+
+            document.getElementById('display-name').innerText = name;
+            document.getElementById('avatar-initial').innerText = name.charAt(0).toUpperCase();
+            
+            bgMusic.volume = 0.2;
+            bgMusic.play().catch(e => console.log("Audio play deferred"));
+
+            showSection('game-screen');
+            startGame();
+        }
+
+        function startGame() {
+            currentQuestion = 0;
+            score = 0;
+            lives = 3;
+            updateStatus();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('q-counter').innerText = `Soal ${currentQuestion + 1} / ${questions.length}`;
+            
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = ((currentQuestion / questions.length) * 100) + "%";
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "answer-btn w-full text-left p-4 rounded-2xl shadow-sm font-semibold text-gray-700 flex items-center";
+                btn.innerHTML = `<span class="w-8 h-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-xl mr-4 text-xs font-black border border-blue-100">${String.fromCharCode(65+idx)}</span> ${opt}`;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = 60;
+            const timerEl = document.getElementById('timer');
+            timerEl.innerText = timeLeft + "s";
+            timerEl.classList.remove('timer-low');
+            clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft + "s";
+                
+                if (timeLeft <= 10) timerEl.classList.add('timer-low');
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    lives--;
+                    updateStatus();
+                    showFeedback(false, "Waktu Habis!", "Waktu menjawab 1 menit sudah berakhir. Fokus pada soal selanjutnya!");
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(idx) {
+            clearInterval(timerInterval);
+            const q = questions[currentQuestion];
+            const isCorrect = idx === q.correct;
+
+            if (isCorrect) {
+                // Bonus skor kecepatan (10 poin dasar + sisa waktu/5)
+                const bonus = Math.floor(timeLeft / 5);
+                score += (10 + bonus);
+                showFeedback(true, "Jawaban Benar!", q.hint + ` (Bonus Waktu: +${bonus})`);
+            } else {
+                lives--;
+                showFeedback(false, "Kurang Tepat!", q.hint);
+            }
+            updateStatus();
+        }
+
+        function showFeedback(isCorrect, title, msg) {
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            
+            feedbackIcon.innerText = isCorrect ? "🎖️" : "⚠️";
+            feedbackTitle.innerText = title;
+            feedbackTitle.style.color = isCorrect ? "#16a34a" : "#ef4444";
+            document.getElementById('feedback-msg').innerText = msg;
+            
+            document.getElementById('feedback-container').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            document.getElementById('feedback-container').classList.add('hidden');
+            currentQuestion++;
+            
+            if (lives <= 0 || currentQuestion >= questions.length) {
+                endGame();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function updateStatus() {
+            document.getElementById('score').innerText = score;
+            document.getElementById('lives').innerText = lives;
+        }
+
+        function endGame() {
+            showSection('end-screen');
+            document.getElementById('final-score').innerText = score;
+            const name = document.getElementById('user-name').value;
+            const uClass = document.getElementById('user-class').value;
+            document.getElementById('final-identity').innerText = `${name} • ${uClass}`;
+            
+            const rank = document.getElementById('final-rank');
+            const msg = document.getElementById('result-message');
+            const emoji = document.getElementById('final-emoji');
+
+            if (score >= 115) {
+                rank.innerText = "Master IoT";
+                msg.innerText = "Sempurna! Kamu memiliki bakat besar untuk menjadi IoT Engineer masa depan. SMKN 3 Pandeglang bangga padamu!";
+                emoji.innerText = "🏆";
+            } else if (score >= 75) {
+                rank.innerText = "IoT Developer";
+                msg.innerText = "Hebat! Kamu sudah memahami konsep dasar dan penerapan IoT dengan baik. Teruslah bereksperimen!";
+                emoji.innerText = "🥈";
+            } else if (score >= 40) {
+                rank.innerText = "IoT Learner";
+                msg.innerText = "Cukup bagus! Kamu sudah tahu dasar-dasarnya, namun perlu lebih banyak membaca tentang protokol dan komponen.";
+                emoji.innerText = "🥉";
+            } else {
+                rank.innerText = "IoT Beginner";
+                msg.innerText = "Jangan menyerah! Baca kembali tujuan pembelajaran dan pelajari fungsi sensor serta cloud, lalu coba lagi!";
+                emoji.innerText = "📖";
+            }
+        }
+
+        function restartGame() {
+            showSection('game-screen');
+            startGame();
+        }
+    </script>
+</body>
+</html>
